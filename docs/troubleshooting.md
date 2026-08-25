@@ -46,3 +46,25 @@ Modifying the globally-installed `@deepseek-ai/dsh-host-apiproxy/lib/index.js` i
   installed into the profile's own `node_modules` (`autoInstallPeers: false`); they resolve from DSH's shared
   fallback directory at runtime. The pnpm "peer dependencies" warning is expected and harmless.
 - **`allowBuilds` spelling** in `pnpm-workspace.yaml` (pnpm expects `allowBuilds`, not `allowedBuilds`).
+
+## 5. Vision route times out ("Request timed out")
+
+**Symptom:** `describe_image` / `inspect_image` fails with `vision model call failed (TIMEOUT): Request timed out`.
+
+**Root cause:** a transport-level timeout from the provider/relay, not the plugin's own deadline. The plugin's
+`tool.timeoutMs` deadline surfaces with code `AUX_VISION_TOOL_TIMEOUT`; a plain `TIMEOUT` means the vision
+provider (often a shared `new-api`-style relay) is slow, rate-limited or down.
+
+**Fix:** retry (transient rate-limits pass); check the relay endpoint is healthy; switch to a more reliable
+vision provider; or raise `tool.timeoutMs` **only** if the model itself is slow — a longer deadline does not
+fix a hard transport timeout.
+
+## 6. `inspect_image` rejects files without an image extension
+
+**Symptom:** `inspect_image` fails with `unsupported image extension "..." (supported: png/jpg/jpeg/webp/gif)`.
+
+**Root cause:** `inspect_image` infers the media type from the file path's extension, so attachment object files
+(hash-named, no `.png`/`.jpg` suffix) are rejected.
+
+**Fix:** give the file a recognized extension first (e.g. copy to `foo.png`), or use `describe_image` with the
+`[image: {...}]` reference for images already attached to the chat.

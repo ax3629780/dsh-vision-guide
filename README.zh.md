@@ -4,6 +4,8 @@
 
 > English guide: [README.md](./README.md)
 
+> **已验证版本**：`@deepseek-ai/dsh@0.1.0-rc.6`。用到的扩展接缝（`ctx.llm.resolveModelInfo`、`llm/stream`、`inputModalities`）属 pre-1.0，可能随版本调整。
+
 ## 要解决的问题
 
 DeepSeek V4 Pro / Flash 等很多强编码模型是**纯文本**的，在聊天里贴图会直接报错：
@@ -58,6 +60,10 @@ dsh web
 ## 踩坑记录
 
 崩溃（`prepared LLM call config changed...`）和「无法切换模型」这两个坑的根因与修复见 [docs/troubleshooting.md](./docs/troubleshooting.md)。
+
+## 降本优化
+
+除了视觉，`dsh-auxiliary` 还能把压缩、标题、子代理、审批、生图等工作路由到更便宜的模型，见 [docs/optimizing.md](./docs/optimizing.md)。
 
 ## License
 

@@ -12,13 +12,16 @@ community-provided" area.
 | Project | Mechanism | Tests | Cache / persistence | Core hack? | Reuses your provider? |
 |---|---|---|---|---|---|
 | **[`@dsh-plugin/dsh-auxiliary`](https://github.com/dsh-plugins/dsh-auxiliary)** ⭐ | `resolveModelInfo` wrapper + `llm/stream` + `describe_image` tool | none (CI typecheck) | none (on-demand) | **no** | **yes** (`vision.provider`/`model`) |
-| [`dsh-vision-fallback`](https://github.com/1HelloMan1/dsh-vision-fallback) | `agent/pre-step` + model-only surface replacement | 22 | `observations.json` (survives restart/compaction) | no | no (raw `baseURL`) |
-| [`dsh-vision-router`](https://github.com/ysr666/dsh-vision-router) | tool-based (14 tools) + stealth mode | 657 | — | no (optional) | yes |
+| [`dsh-vision-fallback`](https://github.com/1HelloMan1/dsh-vision-fallback) | `agent/pre-step` + model-only surface replacement | ~22 | `observations.json` (survives restart/compaction) | no | no (raw `baseURL`) |
+| [`dsh-vision-router`](https://github.com/ysr666/dsh-vision-router) | tool-based (~14 tools) + stealth mode | ~657 | — | no (optional) | yes |
 | [`dsh-llm-image-routing`](https://github.com/CuzWeAre/dsh-llm-image-routing) | image routing | — | — | — | — |
 | [`dsh-auto-vision`](https://github.com/NormanFxxkingRockwell/dsh-auto-vision) | auto-discovers a multimodal model | — | — | — | yes |
 | [`dsh-image-pathify`](https://github.com/dami9527/dsh-image-pathify) | built-in `识图` tool | — | — | — | — |
 | [`visual-review`](https://github.com/wang-bool/visual-review) | image upload + recognition | — | — | — | — |
 | [`dsh-llm-auto-route`](https://www.npmjs.com/package/dsh-llm-auto-route) | automatic model routing | — | — | — | — |
+
+> Test counts, cache filenames and URL conventions for third-party projects were spot-checked against the
+> linked repos at the time of writing and may drift as those projects change. Re-verify before citing them.
 
 ## Why `dsh-auxiliary` won
 
@@ -42,11 +45,11 @@ community-provided" area.
 
 ## Known trade-offs
 
-- **No unit tests** (unlike `dsh-vision-fallback`'s 22 and `dsh-vision-router`'s 657).
+- **No unit tests** (unlike `dsh-vision-fallback`'s ~22 and `dsh-vision-router`'s ~657).
 - **No result cache** — `describe_image` re-calls the vision model each time; mitigated by it being on-demand.
 - **Compaction doesn't preserve image descriptions** — with a text-only compaction model, images degrade to text
   references in the summary (`dsh-vision-fallback` handles this explicitly).
-- **LGPL-3.0** license — fine for personal use; mind the copyleft terms if you redistribute.
+- **LGPL-3.0-only** license — fine for personal use; mind the copyleft terms if you redistribute.
 - **Single maintainer** — bus factor 1.
 
 If your top priority is *persistent caching across restart/compaction* rather than *reusing your provider config*,

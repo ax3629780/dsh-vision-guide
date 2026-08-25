@@ -4,6 +4,8 @@ Add image understanding to **text-only** [DeepSeek Harness](https://github.com/d
 
 > 中文说明见 [README.zh.md](./README.zh.md)
 
+> **Verified against** `@deepseek-ai/dsh@0.1.0-rc.6`. The extension seams used here (`ctx.llm.resolveModelInfo`, `llm/stream`, `inputModalities`) are pre-1.0 and may move in future releases.
+
 ## The problem
 
 DeepSeek V4 Pro / Flash and many strong coding models are **text-only**. Dropping an image into the chat fails with:
@@ -12,7 +14,7 @@ DeepSeek V4 Pro / Flash and many strong coding models are **text-only**. Droppin
 
 ## The solution
 
-Use the community plugin [`@dsh-plugin/dsh-auxiliary`](https://github.com/dsh-plugins/dsh-auxiliary). It layers vision (plus optional compaction / subagent / title / approval routes) on the **official `ctx.llm` seam**:
+Use the community plugin [`@dsh-plugin/dsh-auxiliary`](https://github.com/dsh-plugins/dsh-auxiliary). It layers vision (plus optional compaction / subagent / title / approval / image-generation routes) on the **official `ctx.llm` seam**:
 
 1. A `resolveModelInfo` wrapper makes a text-only model *claim* image input, so the stock admission check passes — **no core-package edits**.
 2. An `llm/stream` listener rewrites image blocks into lightweight `[image: {...}]` text references.
@@ -58,6 +60,10 @@ This guide was written after surveying several community vision plugins. See [do
 ## Troubleshooting
 
 Known pitfalls (the crash and the "can't switch model" bug) are documented in [docs/troubleshooting.md](./docs/troubleshooting.md).
+
+## Optimizing
+
+Beyond vision, `dsh-auxiliary` can route compaction, title, subagent, approval and image-generation work to cheaper models. See [docs/optimizing.md](./docs/optimizing.md).
 
 ## License
 
